@@ -10,6 +10,9 @@ const Home = ({ navigation }) => {
       <Pressable onPress={() => navigation.navigate("Login")}>
         <MaterialCommunityIcons name='login-variant' size={48} color='tomato' />
       </Pressable>
+      <Pressable onPress={() => navigation.navigate("Form")}>
+        <MaterialCommunityIcons name='login' size={48} color='rebeccapurple' />
+      </Pressable>
 
     </View>
   )

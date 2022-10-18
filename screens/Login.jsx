@@ -31,7 +31,6 @@ const Login = () => {
         />
         <Pressable onPress={() => setIsVisible(!isVisible)}>
           <Feather name={isVisible ? "eye" : "eye-off"} size={24} />
-
         </Pressable>
       </View>
 
