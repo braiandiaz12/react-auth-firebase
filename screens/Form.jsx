@@ -1,5 +1,6 @@
 import { View, Text, TextInput, Pressable, TouchableHighlight, Alert, ActivityIndicator } from 'react-native';
 import React, { useState, useEffect } from 'react';
+import { loginValidationSchema } from '../validation/validationSchema';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import { styles } from '../styles/styles';
@@ -9,26 +10,34 @@ const Form = () => {
   const navigation = useNavigation() //sin uso... por ahora
   const [user, setUser] = useState({})
   const [isVisible, setIsVisible] = useState(false)
+  const [isNewUser, setIsNewUser] = useState(false)
 
   const handleRegister = (values) => {
+    console.log('register');
+    console.log(JSON.stringify(values, null, 2))
+  }
+  const handleLogin = (values) => {
+    console.log('login');
     console.log(JSON.stringify(values, null, 2))
   }
 
   return (
     <Formik
       initialValues={{ email: '', password: '' }}
-      onSubmit={values => handleRegister(values)}
+      validationSchema={loginValidationSchema}
+      onSubmit={values => { isNewUser ? handleRegister(values) : handleLogin(values) }}
     >
       {({
-        handleChange, handleBlur, handleSubmit, values
+        handleChange, handleBlur, handleSubmit, values, errors, touched
       }) => (
 
         <View style={styles.container}>
           {/* todo: show possible errors here */}
+          {errors.email && touched.email && (<Text style={styles.error}>{errors.email}</Text>)}
           <View style={styles.inputWithIcon}>
             <TextInput style={styles.input}
-              placeholder='poné email...'
-              placeholderTextColor={'limegreen'}
+              placeholder='Ingrese email...'
+              placeholderTextColor={'darkslategray'}
               onChangeText={handleChange('email')}
               name="email"
               value={values.email}
@@ -36,11 +45,13 @@ const Form = () => {
             />
             <MaterialIcons name='alternate-email' size={24} />
           </View>
+
+          {errors.password && touched.password && (<Text style={styles.error}>{errors.password}</Text>)}
           <View style={styles.inputWithIcon}>
 
             <TextInput style={styles.input}
-              placeholder='contraseña...'
-              placeholderTextColor={'red'}
+              placeholder='Ingrese contraseña...'
+              placeholderTextColor={'darkslategray'}
               onChangeText={handleChange('password')}
               name='password'
               value={values.password}
@@ -52,13 +63,22 @@ const Form = () => {
             </Pressable>
 
           </View>
-          <TouchableHighlight onPress={handleSubmit}>
-            <Text>Register</Text>
+          <TouchableHighlight style={isNewUser ? [styles.button, styles.bgMistyRose] : [styles.button, styles.bgPowderBlue]} onPress={handleSubmit}>
+            {isNewUser ?
+              <Text style={[styles.buttonText]}>Crear cuenta</Text>
+              :
+              <Text style={[styles.buttonText]}>Ingresar</Text>
+            }
           </TouchableHighlight>
 
-
-
-
+          <TouchableHighlight style={[styles.button, styles.bgBurlywood]} onPress={() => setIsNewUser((prev => !prev))
+          } >
+            {isNewUser ?
+              <Text style={styles.buttonText}>Ya tengo una cuenta</Text>
+              :
+              <Text style={styles.buttonText}>Quiero crear una cuenta</Text>
+            }
+          </TouchableHighlight>
         </View>
       )}
     </Formik>

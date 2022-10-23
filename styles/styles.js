@@ -1,5 +1,4 @@
 import { StyleSheet } from "react-native";
-
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -8,17 +7,51 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   input: {
-    width: 250,
+
     marginBottom: 20,
     fontSize: 18,
+    width: 350,
     height: 50,
     borderBottomWidth: 1,
-    marginEnd: -25
-
+    marginEnd: -25,
   },
   inputWithIcon: {
+    width: 350,
     flexDirection: 'row',
     alignItems: 'center',
-  }
+    justifyContent: 'center'
 
+  },
+  button: {
+    borderRadius: 10,
+    marginTop: 25,
+    padding: 10,
+    alignItems: 'center',
+    width: 350,
+  },
+  bgPowderBlue: {
+    backgroundColor: 'powderblue',
+  },
+  bgMistyRose: {
+    backgroundColor: 'mistyrose'
+  },
+  bgBurlywood: {
+    backgroundColor: 'burlywood'
+  },
+  bgRebeccaPurple: {
+    backgroundColor: 'rebeccapurple'
+  },
+
+  textLight: {
+    color: 'snow'
+  },
+
+  buttonText: {
+    fontSize: 18,
+  },
+
+  error: {
+    color: 'red',
+    alignSelf: 'center'
+  }
 });

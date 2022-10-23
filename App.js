@@ -8,7 +8,15 @@ const Stack = createNativeStackNavigator()
 export default function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{
+        headerStyle: {
+          backgroundColor: 'gray'
+        },
+        headerTintColor: 'white',
+        headerTitleStyle: {
+          fontWeight: 'bold'
+        }
+      }}>
         <Stack.Screen name='Home' component={Home} options={{ title: 'Inicio' }} />
         <Stack.Screen name='Login' component={Login} options={{ title: 'logueate 👻' }} />
         <Stack.Screen name='Form' component={Form} options={{ title: 'Formik & Yup' }} />
