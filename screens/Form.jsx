@@ -1,25 +1,70 @@
+//Firebase imports
+import { initializeApp } from 'firebase/app'
+import { firebaseConfig } from '../firebase';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
+const app = initializeApp(firebaseConfig)
+const auth = getAuth()
+//
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { View, Text, TextInput, Pressable, TouchableHighlight, Alert, ActivityIndicator } from 'react-native';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { loginValidationSchema } from '../validation/validationSchema';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import { styles } from '../styles/styles';
 import { MaterialIcons, Feather } from '@expo/vector-icons';
+import UserCtx from '../userCtx';
 
 const Form = () => {
-  const navigation = useNavigation() //sin uso... por ahora
-  const [user, setUser] = useState({})
+  const navigation = useNavigation()
+  const { user, setUser } = useContext(UserCtx)
   const [isVisible, setIsVisible] = useState(false)
   const [isNewUser, setIsNewUser] = useState(false)
+  const [initializing, setInitializing] = useState(true)
+
+  //handling user state change 
+  const stateChange = (user) => {
+    setUser((prev) => prev = user)
+    if (initializing) setInitializing(prev => prev = false)
+  }
+
+  useEffect(() => {
+    const subscriber = auth.onAuthStateChanged(stateChange)
+    return subscriber //unsubscribe on unmount
+  }, [])
 
   const handleRegister = (values) => {
-    console.log('register');
-    console.log(JSON.stringify(values, null, 2))
+    createUserWithEmailAndPassword(auth, values.email, values.password)
+      .then(userCredentials => {
+        console.log(userCredentials);
+        setUser(prev => ({ ...prev, email: values.email }))
+        storeUser(values.email)
+      })
+      .catch(err => console.log(err))
   }
+
   const handleLogin = (values) => {
-    console.log('login');
-    console.log(JSON.stringify(values, null, 2))
+    signInWithEmailAndPassword(auth, values.email, values.password)
+      .then(userCredentials => {
+        console.log(userCredentials);
+        setUser(prev => ({ ...prev, email: values.email }))
+        storeUser(values.email)
+      })
+      .catch(err => console.log(err))
+
   }
+
+  const storeUser = async (user) => {
+    try {
+      const userEmail = JSON.stringify(user)
+      AsyncStorage.setItem('email', userEmail)
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+
+  if (initializing) return <ActivityIndicator />
 
   return (
     <Formik
@@ -78,6 +123,9 @@ const Form = () => {
               :
               <Text style={styles.buttonText}>Quiero crear una cuenta</Text>
             }
+          </TouchableHighlight>
+          <TouchableHighlight onPress={() => navigation.navigate("ForgotPassword")} style={[styles.button, styles.bgRebeccaPurple]}>
+            <Text style={[styles.buttonText, styles.textLight]}>Forgot password</Text>
           </TouchableHighlight>
         </View>
       )}
