@@ -4,16 +4,16 @@ import { firebaseConfig } from '../firebase';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth"
 const app = initializeApp(firebaseConfig)
 const auth = getAuth()
-//
+//fin firebase imports
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { View, Text, TextInput, Pressable, TouchableHighlight, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, Pressable, TouchableHighlight, ActivityIndicator, Image, SafeAreaView, StatusBar, TouchableOpacity } from 'react-native';
 import React, { useState, useEffect, useContext } from 'react';
 import { loginValidationSchema } from '../validation/validationSchema';
 import { useNavigation } from '@react-navigation/native';
 import { Formik } from 'formik';
 import { styles } from '../styles/styles';
-import { MaterialIcons, Feather } from '@expo/vector-icons';
 import UserCtx from '../userCtx';
+
 
 const Form = () => {
   const navigation = useNavigation()
@@ -22,7 +22,8 @@ const Form = () => {
   const [isNewUser, setIsNewUser] = useState(false)
   const [initializing, setInitializing] = useState(true)
 
-  //handling user state change 
+  //Handlers
+  
   const stateChange = (user) => {
     setUser((prev) => prev = user)
     if (initializing) setInitializing(prev => prev = false)
@@ -30,7 +31,7 @@ const Form = () => {
 
   useEffect(() => {
     const subscriber = auth.onAuthStateChanged(stateChange)
-    return subscriber //unsubscribe on unmount
+    return subscriber
   }, [])
 
   const handleRegister = (values) => {
@@ -67,6 +68,7 @@ const Form = () => {
   if (initializing) return <ActivityIndicator />
 
   return (
+
     <Formik
       initialValues={{ email: '', password: '' }}
       validationSchema={loginValidationSchema}
@@ -77,56 +79,64 @@ const Form = () => {
       }) => (
 
         <View style={styles.container}>
-          {/* todo: show possible errors here */}
+          <Image source={require('../assets/backImage.png')} style={styles.backImage} />
+          <View style={styles.whiteSheet} />
           {errors.email && touched.email && (<Text style={styles.error}>{errors.email}</Text>)}
-          <View style={styles.inputWithIcon}>
-            <TextInput style={styles.input}
-              placeholder='Ingrese email...'
-              placeholderTextColor={'darkslategray'}
-              onChangeText={handleChange('email')}
-              name="email"
-              value={values.email}
-              textAlignVertical='bottom'
-            />
-            <MaterialIcons name='alternate-email' size={24} />
-          </View>
+          <SafeAreaView style={styles.form}>
+            <Text style={styles.title}>ChatApp</Text>
+            <View style={styles.inputWithIcon}>
+              <TextInput style={styles.input}
+                placeholder='Ingrese email...'
+                placeholderTextColor={'darkslategray'}
+                onChangeText={handleChange('email')}
+                name="email"
+                value={values.email}
+                textAlignVertical='bottom'
+                autoCapitalize="none"
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                autoFocus={true}
+              />
+            </View>
 
-          {errors.password && touched.password && (<Text style={styles.error}>{errors.password}</Text>)}
-          <View style={styles.inputWithIcon}>
+            {errors.password && touched.password && (<Text style={styles.error}>{errors.password}</Text>)}
+            <View style={styles.inputWithIcon}>
 
-            <TextInput style={styles.input}
-              placeholder='Ingrese contraseña...'
-              placeholderTextColor={'darkslategray'}
-              onChangeText={handleChange('password')}
-              name='password'
-              value={values.password}
-              textAlignVertical='bottom'
-              secureTextEntry={isVisible}
-            />
-            <Pressable onPress={() => setIsVisible(!isVisible)}>
-              <Feather name={isVisible ? "eye" : "eye-off"} size={24} />
-            </Pressable>
+              <TextInput style={styles.input}
+                placeholder='Ingrese contraseña...'
+                placeholderTextColor={'darkslategray'}
+                onChangeText={handleChange('password')}
+                name='password'
+                value={values.password}
+                textAlignVertical='bottom'
+                autoCapitalize="none"
+                autoCorrect={false}
+                secureTextEntry={true}
+                textContentType="password"
+              />
+            </View>
+            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+              {isNewUser ?
+                <Text style={[styles.buttonText]}>Crear cuenta</Text>
+                :
+                <Text style={[styles.buttonText]}>Ingresar</Text>
+              }
+            </TouchableOpacity>
 
-          </View>
-          <TouchableHighlight style={isNewUser ? [styles.button, styles.bgMistyRose] : [styles.button, styles.bgPowderBlue]} onPress={handleSubmit}>
-            {isNewUser ?
-              <Text style={[styles.buttonText]}>Crear cuenta</Text>
-              :
-              <Text style={[styles.buttonText]}>Ingresar</Text>
-            }
-          </TouchableHighlight>
+            <TouchableOpacity style={[styles.button, styles.bgBurlywood]} onPress={() => setIsNewUser((prev => !prev))
+            } >
+              {isNewUser ?
+                <Text style={styles.buttonText}>Ya tengo una cuenta</Text>
+                :
+                <Text style={styles.buttonText}>Quiero crear una cuenta</Text>
+              }
+            </TouchableOpacity>
+            <View style={{ marginTop: 20, flexDirection: 'row', alignItems: 'center', alignSelf: 'center' }}>
+              <Text style={{ color: 'gray', fontWeight: '600', fontSize: 14 }} onPress={() => navigation.navigate("ForgotPassword")}>Olvidé mi contraseña</Text>
+            </View>
+          </SafeAreaView>
+          <StatusBar barStyle="light-content" />
 
-          <TouchableHighlight style={[styles.button, styles.bgBurlywood]} onPress={() => setIsNewUser((prev => !prev))
-          } >
-            {isNewUser ?
-              <Text style={styles.buttonText}>Ya tengo una cuenta</Text>
-              :
-              <Text style={styles.buttonText}>Quiero crear una cuenta</Text>
-            }
-          </TouchableHighlight>
-          <TouchableHighlight onPress={() => navigation.navigate("ForgotPassword")} style={[styles.button, styles.bgRebeccaPurple]}>
-            <Text style={[styles.buttonText, styles.textLight]}>Forgot password</Text>
-          </TouchableHighlight>
         </View>
       )}
     </Formik>

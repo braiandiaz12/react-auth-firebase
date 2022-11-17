@@ -29,15 +29,15 @@ const ForgotPassword = () => {
           {errors.email && (<Text style={styles.error}>{errors.email}</Text>)}
           <TextInput
             style={styles.input}
-            placeholder='email...'
+            placeholder='ingrese su email...'
             placeholderTextColor={'darkslategray'}
             onChangeText={handleChange('email')}
             name="email"
             value={values.email}
           />
-          <TouchableHighlight onPress={handleSubmit} style={[styles.button, styles.bgRebeccaPurple]} >
+          <TouchableHighlight onPress={handleSubmit} style={[styles.button]} >
             {
-              <Text style={[styles.buttonText, styles.textLight]}>Send email to reset</Text>
+              <Text style={[styles.buttonText, styles.textLight]}>Resetear contraseña</Text>
             }
           </TouchableHighlight>
         </SafeAreaView>

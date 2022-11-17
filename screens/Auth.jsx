@@ -4,6 +4,7 @@ import UserCtx from '../userCtx';
 import { getAuth } from 'firebase/auth';
 import { styles } from '../styles/styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { SafeAreaView } from 'react-native-safe-area-context';
 const auth = getAuth()
 
 const Auth = () => {
@@ -28,10 +29,13 @@ const Auth = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Registrado con el email: {user.email}</Text>
-      <Pressable style={[styles.button, styles.bgRebeccaPurple]} onPress={logout}>
-        <Text style={[styles.buttonText, styles.textLight]}>logout</Text>
-      </Pressable>
+      <SafeAreaView style={styles.whiteSheet}>
+        <Text style={styles.title}>Bienvenido</Text>
+        <Text style={{ textAlign: 'center', fontWeight: '600', fontSize: 14 }}>{user.email}</Text>
+        <Pressable style={[styles.button]} onPress={logout}>
+          <Text style={[styles.buttonText]}>logout</Text>
+        </Pressable>
+      </SafeAreaView>
     </View>
   )
 }

@@ -1,10 +1,7 @@
-import Home from './screens/Home';
-import Login from './screens/Login';
 import Form from './screens/Form';
 import Auth from './screens/Auth';
 import ForgotPassword from './screens/ForgotPassword';
 import { useEffect, useState } from 'react';
-
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import UserCtx from './userCtx';
@@ -32,27 +29,17 @@ export default function App() {
     <UserCtx.Provider value={{ user, setUser }}>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{
-          headerStyle: {
-            backgroundColor: 'gray'
-          },
-          headerTintColor: 'white',
-          headerTitleStyle: {
-            fontWeight: 'bold'
-          }
+          headerShown: false,
         }}>
 
           {user?.email ?
-            <Stack.Screen name='Auth' component={Auth} options={{ title: 'Acces Granted' }} />
+            <Stack.Screen name='Auth' component={Auth} options={{ title: 'Acceso autorizado' }} />
             :
             <>
-              <Stack.Screen name='Home' component={Home} options={{ title: 'Inicio' }} />
-              <Stack.Screen name='Login' component={Login} options={{ title: 'logueate 👻' }} />
-              <Stack.Screen name='Form' component={Form} options={{ title: 'Formik & Yup' }} />
-              <Stack.Screen name='ForgotPassword' component={ForgotPassword} options={{ title: 'Te olvidaste...' }} />
+              <Stack.Screen name='Form' component={Form} options={{ title: 'Login' }} />
+              <Stack.Screen name='ForgotPassword' component={ForgotPassword} options={{ title: 'Olvidaste la contraseña' }} />
             </>
           }
-
-
         </Stack.Navigator>
       </NavigationContainer>
     </UserCtx.Provider>
