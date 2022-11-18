@@ -1,6 +1,3 @@
-# Project clone
-git clone "url.github"
-
 ## import firebase keys
 in firebase.js
 
